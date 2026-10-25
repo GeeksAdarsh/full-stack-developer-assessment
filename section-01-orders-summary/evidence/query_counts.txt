@@ -1,0 +1,23 @@
+Orders summary query profile
+============================
+Customer: 1 Asha Menon
+Orders: 250
+
+These counts are only the summary code (CaptureQueriesContext).
+They do not include silk writing its own rows.
+
+Broken queryset: 1251 queries in 857.2 ms
+Fixed queryset:  2 queries in 27.4 ms
+Same response:   True
+
+Broken SQL (first query, trimmed):
+  [1] SELECT "orders_order"."id", "orders_order"."customer_id", "orders_order"."reference", "orders_order"."status", "orders_order"."created_at" FROM "orders_order" WHERE "orders_order"."customer_id" = 1 ORDER BY "orders_order"."created_at" DESC, "orders_order"."id" DESC
+
+Fixed SQL (each query, trimmed):
+  [1] SELECT "orders_order"."id", "orders_order"."customer_id", "orders_order"."reference", "orders_order"."status", "orders_order"."created_at", "orders_customer"."id", "orders_customer"."name", "orders_customer"."email", "orders_customer"."city" FROM "orders_order" INNER JOIN "orders_customer" ON ("orders_order"."customer_id" = "orders_customer"."id") WHERE "orders_order"."customer_id" = 1 ORDER BY "o
+  [2] SELECT "orders_orderitem"."id", "orders_orderitem"."order_id", "orders_orderitem"."product_id", "orders_orderitem"."quantity", "orders_orderitem"."unit_price", "orders_product"."id", "orders_product"."sku", "orders_product"."name", "orders_product"."unit_price" FROM "orders_orderitem" INNER JOIN "orders_product" ON ("orders_orderitem"."product_id" = "orders_product"."id") WHERE "orders_orderitem".
+
+Silk recorded the same two HTTP calls.
+num_sql_queries is silk's count for that request:
+  broken: silk num_sql_queries=1251, time_taken=2232.942 ms, view=order-summary
+  fixed: silk num_sql_queries=2, time_taken=47.036 ms, view=order-summary

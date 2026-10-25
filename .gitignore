@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+*.sqlite3
+.env
+.idea/
+.vscode/
+.pytest_cache/
+dump.rdb
+appendonly.aof
+*.pdf
